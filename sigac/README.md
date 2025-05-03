@@ -88,3 +88,38 @@
 | Conexão com banco falha| Verifique arquivo `.env`         |
 | Página em branco       | Consulte `storage/logs`          |
 
+# Atualizações 
+## O que foi implementado
+### 1. Footer Básico (rodapé)
+**Arquivo criado:** `resources/views/partials/footer.blade.php`
+**foi incluído No final do arquivo `resources/views/template.blade.php`.
+
+### 2. Dashboard Simples
+**Arquivo criado:** `resources/views/dashboard.blade.php`
+
+2. **Menu de Navegação (`resources/views/partials/navbar.blade.php` ou similar)**:
+```html
+<li class="nav-item">
+    <a class="nav-link" href="/dashboard">
+        <i class="bi bi-speedometer2"></i> Dashboard
+    </a>
+</li>
+```
+
+## 📝 Anotações Importantes
+
+### O que aprendi com essas implementações:
+1. **Componentização**: Aprendi a dividir o código em partes menores (footer como componente separado)
+2. **Blade**: Como usar `@extends` e `@section` para organizar views
+3. **Counters**: Buscar contagens diretamente dos modelos com `Model::count()`
+4. **Design**: Uso prático de cards do Bootstrap para dashboard
+
+### Dicas para lembrar:
+- Sempre crie arquivos novos em pastas organizadas
+- Atualize as rotas quando criar novas páginas
+- Teste a responsividade em diferentes telas
+- Não esqueça de incluir os componentes onde serão usados
+
+```diff
++ Lembrete: Commit as mudanças no Git após testar!
+```

@@ -1,48 +1,56 @@
-@extends('layouts.app')
+@extends('template')
 
 @section('title', 'Dashboard')
 
 @section('content')
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-    <div class="bg-white p-6 rounded-lg shadow">
-        <h3 class="text-lg font-semibold mb-2">Total de Alunos</h3>
-        <p class="text-3xl font-bold">{{ $totalAlunos }}</p>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1><i class="bi bi-speedometer2 me-2"></i>Dashboard</h1>
+        <span class="badge bg-primary">Atualizado em {{ now()->format('d/m/Y H:i') }}</span>
     </div>
-    
-    <div class="bg-white p-6 rounded-lg shadow">
-        <h3 class="text-lg font-semibold mb-2">Total de Cursos</h3>
-        <p class="text-3xl font-bold">{{ $totalCursos }}</p>
-    </div>
-    
-    <div class="bg-white p-6 rounded-lg shadow">
-        <h3 class="text-lg font-semibold mb-2">Total de Comprovantes</h3>
-        <p class="text-3xl font-bold">{{ $totalComprovantes }}</p>
-    </div>
-</div>
 
-<div class="bg-white p-6 rounded-lg shadow">
-    <h3 class="text-lg font-semibold mb-4">Últimos Comprovantes</h3>
-    <div class="overflow-x-auto">
-        <table class="min-w-full">
-            <thead>
-                <tr class="border-b">
-                    <th class="text-left py-2">Aluno</th>
-                    <th class="text-left py-2">Atividade</th>
-                    <th class="text-left py-2">Horas</th>
-                    <th class="text-left py-2">Data</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($ultimosComprovantes as $comprovante)
-                <tr class="border-b hover:bg-gray-50">
-                    <td class="py-2">{{ $comprovante->aluno->nome }}</td>
-                    <td class="py-2">{{ Str::limit($comprovante->atividade, 30) }}</td>
-                    <td class="py-2">{{ $comprovante->horas }}h</td>
-                    <td class="py-2">{{ $comprovante->created_at->format('d/m/Y') }}</td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+    <div class="row g-4">
+        <!-- Card Alunos -->
+        <div class="col-md-4">
+            <div class="card border-primary shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-people-fill text-primary display-4 mb-3"></i>
+                    <h2 class="text-primary">{{ $totalAlunos }}</h2>
+                    <p class="card-text">Alunos Cadastrados</p>
+                    <a href="/alunos" class="btn btn-outline-primary btn-sm">
+                        <i class="bi bi-list-ul"></i> Ver Todos
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Cursos -->
+        <div class="col-md-4">
+            <div class="card border-success shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-book-fill text-success display-4 mb-3"></i>
+                    <h2 class="text-success">{{ $totalCursos }}</h2>
+                    <p class="card-text">Cursos Ativos</p>
+                    <a href="/cursos" class="btn btn-outline-success btn-sm">
+                        <i class="bi bi-list-ul"></i> Ver Todos
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Card Turmas -->
+        <div class="col-md-4">
+            <div class="card border-info shadow-sm h-100">
+                <div class="card-body text-center">
+                    <i class="bi bi-collection-fill text-info display-4 mb-3"></i>
+                    <h2 class="text-info">{{ $totalTurmas }}</h2>
+                    <p class="card-text">Turmas Ativas</p>
+                    <a href="/turmas" class="btn btn-outline-info btn-sm">
+                        <i class="bi bi-list-ul"></i> Ver Todos
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
