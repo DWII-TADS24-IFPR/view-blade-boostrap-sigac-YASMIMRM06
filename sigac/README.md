@@ -1,171 +1,90 @@
-# Anotações da Aluna - Atualizações do Sistema  19\04\2025
+#  Atualizações do Projeto SIGAC - Versão Consolidada
 
-*"Oi prof! Seguem minhas anotações sobre as mudanças que implementei no sistema. Deixei tudo explicadinho com exemplos pra facilitar!"* ✨  
+## 🔄 Melhorias Implementadas
 
----
+### Estrutura do Projeto
+- **Organização de pastas**: Cada modelo (Aluno, Curso, etc.) agora tem sua própria pasta com views dedicadas
+- **Template unificado**: Sistema de herança com `template.blade.php` para evitar duplicação
 
-## Índice
-1. [Estrutura do Sistema](#1-🗂️-o-que-mudou-na-estrutura)  
-2. [Sistema de Permissões](#2-🔄-como-funcionam-as-permissões)  
-3. [Mudanças nos Models](#3-📌-mudanças-nos-models-existentes)  
-4. [Banco de Dados](#4-💾-banco-de-dados---migrações-novas)  
-5. [Seeders](#5-🌱-dados-iniciais-seeders)  
-6. [Testes](#6-🧪-testando-na-prática)  
-7. [Relacionamentos](#📚-explicação-dos-relacionamentos-no-repositório)  
-8. [Dúvidas](#7-❓-dúvidas-que-ainda-tenho)  
+### Novas Funcionalidades
+- **CRUD completo** para 8 modelos principais
+- **Sistema de upload** para documentos
+- **Valores monetários formatados** nos comprovantes
+- **Conteúdo dinâmico** nas declarações
 
----
+### 🎨 Interface e UX
+- **Design responsivo** com Bootstrap 5
+- **Feedback visual** aprimorado para ações do usuário
+- **Paginação automática** em todas as listagens
+- **Validações em tempo real** com mensagens específicas por campo
 
-### 1. O que mudou na estrutura?  
+### 🔗 Relacionamentos
+- Exibição de **nomes ao invés de IDs**
+- Selects **pré-preenchidos** com dados relacionados
+- **Eager Loading** para otimização de consultas
 
-**Antes:**  
-- Models básicos (User, Aluno, Turma)  
-- Sem controle de acesso granular  
+## 🛠️ Como Testar o Projeto
 
-**Agora:**  
-```plaintext
-app/
-├── Traits/
-│   └── HasPermissions.php  # Trait para gerenciar permissões
-├── Models/
-│   ├── Role.php            # Definição de cargos
-│   ├── Permission.php      # Definição de permissões
-│   └── ...                 # Outros models atualizados
-```
+### Requisitos
+- PHP ≥ 8.0
+- Composer
+- Banco de dados MySQL/MariaDB
+- Servidor web (XAMPP, WAMP ou similar)
 
-**Principais adições:**  
-- **Trait `HasPermissions`**: Reutilizável para verificar permissões  
-- **Model `Role`**: Define hierarquia (Admin, Professor, etc.)  
-- **Model `Permission`**: Controla ações específicas  
-
-*Exemplo de uso:*  
-```php
-// User.php
-use App\Traits\HasPermissions;
-
-class User extends Authenticatable {
-    use HasPermissions;  # Habilita sistema de permissões
-}
-```
-
----
-
-### 2. Como funcionam as PERMISSÕES?  
-
-**Estrutura do Banco:**  
-| Tabela             | Descrição                  | Relacionamento         |
-|--------------------|----------------------------|------------------------|
-| `roles`            | Cargos do sistema          | -                      |
-| `permissions`      | Ações permitidas           | -                      |
-| `role_permission`  | Permissões por cargo       | Many-to-Many           |
-| `users`            | Usuários                   | BelongsTo Role         |
-
-**Métodos-chave:**  
-```php
-// Verifica permissão
-$user->hasPermission('editar-alunos');
-
-// Atribui permissão
-$adminRole->permissions()->attach([1, 2]); 
-```
-
----
-
-### 3. Mudanças nos Models Existentes  
-
-#### **User.php**  
-```php
-// Relações adicionadas
-public function role() {
-    return $this->belongsTo(Role::class);
-}
-
-public function turmas() {
-    return $this->belongsToMany(Turma::class);
-}
-```
-
-#### **Aluno.php**  
-```php
-// Novo relacionamento
-public function documentos() {
-    return $this->hasMany(Documento::class);
-}
-```
-
----
-
-### 4.Banco de Dados - Migrações Novas  
-
-**Arquivos criados:**  
-- `create_permission_tables.php`  
-- `add_fields_to_users.php`  
-
-**Comando para atualizar:**  
-```bash
-php artisan migrate --seed
-```
-
----
-
-### 5.Dados Iniciais (Seeders)  
-
-**RolePermissionSeeder.php**  
-```php
-$admin = Role::create([
-    'name' => 'admin',
-    'description' => 'Acesso total'
-]);
-
-Permission::create([
-    'name' => 'gerenciar-usuários',
-    'description' => 'Pode criar/editar usuários'
-]);
-
-$admin->permissions()->attach([1, 2]);  # Vincula permissões
-```
-
----
-
-### 6.Testando na Prática  
-
-```php
-$admin = User::with('role.permissions')->find(1);
-if ($admin->can('gerenciar-usuários')) {
-    // Lógica restrita
-}
-```
-
----
-
-## Explicação dos Relacionamentos  
-
-### Tipos Implementados:  
-1. **One-to-One**: User ↔ Profile  
-2. **One-to-Many**: Post ↔ Comment  
-3. **Many-to-Many**: Student ↔ Class  
-
-**Exemplo Many-to-Many:**  
-```php
-// Model Student
-public function classes() {
-    return $this->belongsToMany(ClassModel::class)
-                ->withPivot('enrolled_at');
-}
-```
-
----
-
-### 7. ❓ Dúvidas que Ainda Tenho  
-1. Como implementar um CRUD para gerenciar permissões?  
-2. Criar middlewares para proteção de rotas?  
-   ```php
-   Route::get('/admin')->middleware('can:gerenciar-admin');
+### Instalação
+1. Clone o repositório:
+   ```bash
+   git clone [URL_DO_REPOSITÓRIO]
+   cd nome-do-projeto
    ```
 
---- 
+2. Instale as dependências:
+   ```bash
+   composer install
+   ```
 
-Observação Final: 
-*"Adicionei comentários detalhados em todos os arquivos modificados para facilitar a manutenção futura!"*  
+3. Configure o ambiente:
+   - Renomeie `.env.example` para `.env`
+   - Atualize as credenciais do banco de dados
 
-*(Assinatura: Aluna Yasmim Russi)* 
+4. Gere a chave da aplicação:
+   ```bash
+   php artisan key:generate
+   ```
+
+5. Execute migrações e seeders:
+   ```bash
+   php artisan migrate --seed
+   ```
+
+6. Inicie o servidor:
+   ```bash
+   php artisan serve
+   ```
+
+### Testes Recomendados
+1. **CRUD Completo**:
+   - Crie, edite e exclua registros em diferentes modelos
+   
+2. **Validações**:
+   - Teste formulários com dados inválidos
+
+3. **Responsividade**:
+   - Verifique em diferentes tamanhos de tela
+
+4. **Uploads**:
+   - Teste o upload de documentos
+
+## 💡 Dicas Importantes
+- Sempre use `@csrf` em formulários
+- Utilize `old()` para manter dados digitados após erros
+- Aproveite `with()` para otimizar consultas relacionadas
+
+## 🔧 Solução de Problemas Comuns
+
+| Problema               | Solução                          |
+|------------------------|----------------------------------|
+| Erro 500               | Execute `php artisan key:generate` |
+| Conexão com banco falha| Verifique arquivo `.env`         |
+| Página em branco       | Consulte `storage/logs`          |
+
