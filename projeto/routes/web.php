@@ -19,7 +19,7 @@ Route::resource('alunos', AlunoController::class);
 Route::resource('cursos', CursoController::class);
 Route::resource('turmas', TurmaController::class);
 
-/* Página Inicial */
+/* Página Inicial 
 Route::get('/', function () {
     return view('welcome');
-});
+});*/
